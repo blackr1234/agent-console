@@ -8,7 +8,7 @@ const inter = Inter({
 });
 
 export const metadata = {
-	title: "Agentic Console",
+	title: "Agent Console",
 };
 
 export default function RootLayout({ children }) {
