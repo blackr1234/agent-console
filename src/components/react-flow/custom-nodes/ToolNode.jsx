@@ -16,21 +16,7 @@ import {
 } from "@mui/material";
 import { MessageSquare, Cpu, Wrench, FileOutput, Settings2, CheckCircle2, AlertTriangle } from "lucide-react";
 
-/**
- * Shared style helpers so every node feels consistent.
- * Adjust `accent` per node type to give quick visual identity.
- */
-const nodeShell = (accent) => ({
-    minWidth: 240,
-    maxWidth: 280,
-    borderRadius: 3,
-    border: "1px solid",
-    borderColor: "divider",
-    borderTop: "3px solid",
-    borderTopColor: accent,
-    boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
-    bgcolor: "background.paper",
-});
+import { nodeShell } from "./styles";
 
 const headerRow = {
     display: "flex",
@@ -68,6 +54,11 @@ export default function ToolNode({ data }) {
                     <Typography variant="subtitle2" fontWeight={600} sx={{ flex: 1 }}>
                         {data?.label || "Tool Call"}
                     </Typography>
+                    <Tooltip title="Configure model">
+                        <IconButton size="small" onClick={data?.onConfigure} className="nodrag">
+                            <Settings2 size={14} />
+                        </IconButton>
+                    </Tooltip>
                     {statusIcon}
                 </Box>
 

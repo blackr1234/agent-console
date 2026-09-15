@@ -1,20 +1,9 @@
 import React from "react";
 import { Handle, Position } from "@xyflow/react";
-import { Card, CardContent, Box, Typography, Chip } from "@mui/material";
-import { FileOutput } from "lucide-react";
+import { Card, CardContent, Box, Typography, Chip, IconButton, Tooltip } from "@mui/material";
+import { MessageSquare, Cpu, Wrench, FileOutput, Settings2, CheckCircle2, AlertTriangle } from "lucide-react";
 
-const nodeShell = (accent) => ({
-    minWidth: 240,
-    maxWidth: 280,
-    borderRadius: 3,
-    border: "1px solid",
-    borderColor: "divider",
-    borderTop: "3px solid",
-    borderTopColor: accent,
-    boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
-    bgcolor: "background.paper",
-    position: "relative",
-});
+import { nodeShell } from "./styles";
 
 const headerRow = {
     display: "flex",
@@ -49,6 +38,11 @@ export default function OutputNode({ data }) {
                     >
                         {data?.label || "Output"}
                     </Typography>
+                    <Tooltip title="Configure model">
+                        <IconButton size="small" onClick={data?.onConfigure} className="nodrag">
+                            <Settings2 size={14} />
+                        </IconButton>
+                    </Tooltip>
                 </Box>
 
                 <Box
