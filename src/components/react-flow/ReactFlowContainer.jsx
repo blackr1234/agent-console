@@ -16,12 +16,14 @@ import {
 import { Box, Button, Paper, Slide, Typography } from "@mui/material";
 
 import "@xyflow/react/dist/style.css";
+import { nodeTypes } from "./nodeTypes";
 import initialData from "./testData.json";
 
 const palette = [
-    { type: "input", label: "Input" },
-    { type: "default", label: "Default" },
-    { type: "output", label: "Output" },
+    { type: "prompt", label: "Prompt" },
+    { type: "llm", label: "LLM" },
+    { type: "tool", label: "Tool" },
+    { type: "result", label: "Result" },
 ];
 
 const nodeId = () => `node_${Date.now()}`;
@@ -105,6 +107,7 @@ function FlowCanvas() {
                 <ReactFlow
                     nodes={nodes}
                     edges={edges}
+                    nodeTypes={nodeTypes}
                     defaultViewport={initialData.viewport}
                     onNodesChange={onNodesChange}
                     onEdgesChange={onEdgesChange}
