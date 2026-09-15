@@ -1,0 +1,4 @@
+:HL["/agent-console/_next/static/chunks/1i46qavcwcec2.css","style"]
+:HL["/agent-console/_next/static/media/83afe278b6a6bb3c-s.p.2bn3s6zvc0dyp.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/agent-console/_next/static/chunks/1ix59xuhq-q14.css","style"]
+0:{"tree":{"name":"","param":null,"prefetchHints":4176,"slots":{"children":{"name":"executions","param":null,"prefetchHints":4192,"slots":{"children":{"name":"workflow","param":null,"prefetchHints":4192,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":4256,"slots":null}}}}}}},"staleTime":300,"buildId":"GXnZX9bZbKhi8YNmgZvyB"}
