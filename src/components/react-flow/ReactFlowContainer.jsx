@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import {
     ReactFlow,
     ReactFlowProvider,
@@ -36,22 +36,61 @@ function FlowCanvas() {
     const { screenToFlowPosition, setViewport, toObject } = useReactFlow();
     const viewport = useViewport();
 
+    const flowWrapperRef = useRef(null);
+    const touchDragTypeRef = useRef(null);
+
     const onConnect = useCallback((params) => setEdges((eds) => addEdge(params, eds)), [setEdges]);
+
+    // Shared by both the native HTML5 drop handler and the touch fallback.
+    const addNodeAtScreenPoint = useCallback(
+        (type, clientX, clientY) => {
+            setNodes((nds) => [
+                ...nds,
+                {
+                    id: nodeId(),
+                    type,
+                    position: screenToFlowPosition({ x: clientX, y: clientY }),
+                    data: { label: `${type} node` },
+                },
+            ]);
+        },
+        [screenToFlowPosition, setNodes],
+    );
 
     const onDrop = (e) => {
         e.preventDefault();
         const type = e.dataTransfer.getData("application/reactflow");
         if (!type) return;
-        setNodes((nds) => [
-            ...nds,
-            {
-                id: nodeId(),
-                type,
-                position: screenToFlowPosition({ x: e.clientX, y: e.clientY }),
-                data: { label: `${type} node` },
-            },
-        ]);
+        addNodeAtScreenPoint(type, e.clientX, e.clientY);
     };
+
+    // --- Touch fallback for mobile, where native HTML5 DnD doesn't fire ---
+    const onPaletteTouchStart = (type) => () => {
+        touchDragTypeRef.current = type;
+    };
+
+    const onPaletteTouchEnd = (e) => {
+        const type = touchDragTypeRef.current;
+        touchDragTypeRef.current = null;
+        if (!type) return;
+
+        const touch = e.changedTouches[0];
+        if (!touch) return;
+
+        const wrapper = flowWrapperRef.current;
+        if (!wrapper) return;
+        const rect = wrapper.getBoundingClientRect();
+        const isOverCanvas =
+            touch.clientX >= rect.left &&
+            touch.clientX <= rect.right &&
+            touch.clientY >= rect.top &&
+            touch.clientY <= rect.bottom;
+
+        if (isOverCanvas) {
+            addNodeAtScreenPoint(type, touch.clientX, touch.clientY);
+        }
+    };
+    // -----------------------------------------------------------------------
 
     const save = () => localStorage.setItem("example-flow", JSON.stringify(toObject()));
     const restore = () => {
@@ -94,8 +133,10 @@ function FlowCanvas() {
                                 e.dataTransfer.setData("application/reactflow", type);
                                 e.dataTransfer.effectAllowed = "move";
                             }}
+                            onTouchStart={onPaletteTouchStart(type)}
+                            onTouchEnd={onPaletteTouchEnd}
                             variant="outlined"
-                            sx={{ p: 1.5, cursor: "grab" }}
+                            sx={{ p: 1.5, cursor: "grab", touchAction: "none" }}
                         >
                             {label}
                         </Paper>
@@ -103,7 +144,7 @@ function FlowCanvas() {
                 </Box>
             </Box>
 
-            <Box sx={{ flex: 1, position: "relative", overflow: "hidden" }}>
+            <Box ref={flowWrapperRef} sx={{ flex: 1, position: "relative", overflow: "hidden" }}>
                 <ReactFlow
                     nodes={nodes}
                     edges={edges}
