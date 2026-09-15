@@ -12,7 +12,7 @@ export default function AppShell({ children }) {
 		<Box sx={{ display: "flex", height: "100vh", bgcolor: "#fafafa" }}>
 			<Sidebar collapsed={collapsed} setCollapsed={setCollapsed} width={drawerWidth} />
 
-			<Box component="main" sx={{ flex: 1, overflow: "auto", p: 4 }}>
+			<Box component="main" sx={{ flex: 1, overflow: "auto" }}>
 				{children}
 			</Box>
 		</Box>
